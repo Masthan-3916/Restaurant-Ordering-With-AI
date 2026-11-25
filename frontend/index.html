@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#183b32">
+    <title>Table & Thyme — Smart Ordering</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Table and Thyme home"><span class="brand-mark">T</span><span>table <i>&</i> thyme</span></a>
+      <div class="top-actions">
+        <span id="identity" class="identity">Not signed in</span>
+        <button id="logout" class="button button-quiet" type="button" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="login-panel" class="login-panel">
+        <div>
+          <p class="eyebrow">WELCOME TO THE TABLE</p>
+          <h1>Good food, <em>made easy.</em></h1>
+          <p>Browse today's menu, manage your orders, or ask our Gemini-powered restaurant assistant.</p>
+        </div>
+        <form id="login-form" class="login-card">
+          <label for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" value="customer" required>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" value="customer123!" required>
+          <button class="button button-primary" type="submit">Sign in</button>
+          <p class="hint">Demo accounts: customer / customer123! · admin / admin123!</p>
+          <p id="login-error" class="error" role="alert"></p>
+        </form>
+      </section>
+
+      <section id="app-panel" hidden>
+        <div class="intro">
+          <div>
+            <p class="eyebrow">MADE FRESH, JUST FOR YOU</p>
+            <h1>What sounds <em>delicious?</em></h1>
+            <p>Thoughtful ingredients. Honest portions. A little help from AI, whenever you need it.</p>
+          </div>
+          <div class="intro-stamp" aria-hidden="true"><span>FRESH</span><b>✳</b><span>DAILY</span></div>
+        </div>
+
+        <nav class="tabs" aria-label="Main navigation">
+          <button class="tab active" data-panel="menu-panel" type="button">Menu</button>
+          <button class="tab" data-panel="orders-panel" type="button">My orders</button>
+          <button class="tab" data-panel="chat-panel" type="button">Ask the assistant <span class="spark">✳</span></button>
+          <button id="admin-tab" class="tab" data-panel="admin-panel" type="button" hidden>Admin</button>
+        </nav>
+
+        <section id="menu-panel" class="view-panel">
+          <div class="section-heading">
+            <div><p class="eyebrow">THE MENU</p><h2>Our kitchen, today</h2></div>
+            <span id="menu-count" class="muted"></span>
+          </div>
+          <form id="filters" class="filters">
+            <label class="search-field"><span class="sr-only">Search menu</span><span aria-hidden="true">⌕</span><input id="keyword" placeholder="Find a favourite..." autocomplete="off"></label>
+            <label class="select-filter">Category
+              <select id="category"><option value="">All dishes</option></select>
+            </label>
+            <label class="check-filter"><input id="vegetarian" type="checkbox"><span>Vegetarian</span></label>
+            <label class="price-filter">Under ₹ <input id="max-price" type="number" min="1" step="1" placeholder="Any price"></label>
+            <button class="button button-outline" type="submit">Filter</button>
+          </form>
+          <div id="menu-grid" class="menu-grid" aria-live="polite"></div>
+          <div class="cart-bar">
+            <p><strong id="cart-count">0</strong> items in your basket</p>
+            <button id="checkout" class="button button-primary" type="button" disabled>Place order <span id="cart-total">₹0</span></button>
+          </div>
+        </section>
+
+        <section id="orders-panel" class="view-panel" hidden>
+          <div class="section-heading"><div><p class="eyebrow">YOUR TABLE</p><h2>My orders</h2></div><button id="refresh-orders" class="button button-outline" type="button">Refresh</button></div>
+          <div id="orders-list" class="orders-list" aria-live="polite"></div>
+        </section>
+
+        <section id="chat-panel" class="view-panel" hidden>
+          <div class="section-heading"><div><p class="eyebrow">YOUR RESTAURANT COMPANION</p><h2>How can I help?</h2></div><button id="new-chat" class="button button-outline" type="button">＋ New chat</button></div>
+          <div class="chat-layout">
+            <aside class="chat-sidebar"><h3>Your conversations</h3><div id="session-list" class="session-list"></div></aside>
+            <div class="chat-card">
+              <div id="chat-messages" class="chat-messages" aria-live="polite">
+                <div class="welcome-message"><span class="assistant-avatar">✳</span><p>Ask me about the menu, ingredients, restaurant policies, or your orders.</p></div>
+              </div>
+              <p id="chat-error" class="error chat-error" role="alert"></p>
+              <form id="chat-form" class="chat-form">
+                <label class="sr-only" for="chat-input">Your message</label>
+                <textarea id="chat-input" rows="2" maxlength="4000" placeholder="Ask anything about your meal..." required></textarea>
+                <button class="send-button" type="submit" aria-label="Send message">↑</button>
+              </form>
+              <p class="chat-disclaimer">AI can make mistakes. Allergen cross-contact cannot be ruled out.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="admin-panel" class="view-panel" hidden>
+          <div class="section-heading"><div><p class="eyebrow">KITCHEN CONSOLE</p><h2>Manage the menu</h2></div></div>
+          <form id="item-form" class="admin-form">
+            <input name="item_id" type="hidden">
+            <label>Dish name<input name="title" minlength="3" maxlength="120" required></label>
+            <label>Category<input name="category" maxlength="80" required></label>
+            <label>Price (INR)<input name="price" type="number" min="0.01" step="0.01" required></label>
+            <label>Portions available<input name="capacity" type="number" min="0" step="1" required></label>
+            <label class="check-filter"><input name="vegetarian" type="checkbox"><span>Vegetarian</span></label>
+            <button class="button button-primary" type="submit">Add dish</button>
+            <button id="cancel-edit" class="button button-quiet" type="button" hidden>Cancel edit</button>
+          </form>
+          <h3 class="admin-subhead">Knowledge documents</h3>
+          <form id="document-form" class="admin-form">
+            <label>Upload PDF, DOCX or TXT<input name="document" type="file" accept=".pdf,.docx,.txt" required></label>
+            <button class="button button-outline" type="submit">Upload and index</button>
+          </form>
+          <p id="admin-message" role="status" class="muted"></p>
+        </section>
+        <p id="global-error" class="error global-error" role="alert"></p>
+      </section>
+    </main>
+    <footer><span>TABLE & THYME</span><span>Good food brings us together.</span><span>Made with care ✳</span></footer>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

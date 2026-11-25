@@ -1,0 +1,4 @@
+Restaurant Policy — Version 1 — Effective 2026-01-01
+
+Orders may be cancelled only before preparation begins. If preparation has started, cancellation cannot be guaranteed.
+Available portions shown in the menu are subject to change until an order is confirmed.
